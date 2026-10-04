@@ -21,7 +21,7 @@ Vanilla **datapack** for Minecraft Java Edition **26.3** (data pack format **121
 
 Friendly Difficulty starts **disabled** until you turn it on.
 
-- Open the **pause menu** (Esc) and use the **Friendly Difficulty** dialog entry, or use the quick-actions dialog if your client shows it.
+- Open the **pause menu** (Esc) and use the **Friendly Difficulty** dialog entry, or use the quick-actions dialog if your client shows it. The pause entry is available to everyone; **Apply** runs a server function and may require a permission level that allows `/function` (operators, cheats enabled, or singleplayer).
 - You can also run: `/function friendlydifficulty:options/open`
 
 ### Settings
@@ -30,7 +30,7 @@ Friendly Difficulty starts **disabled** until you turn it on.
 |--------|---------|---------|
 | **Enabled** | Turns the pack on or off. When off, vanilla behavior is unchanged. | Off |
 | **Explosions** | **Off** — blasts neutralized (e.g. creeper radius 0). **Reduced** — smaller blasts than vanilla Easy. **Full** — vanilla explosion power. | Reduced |
-| **World Damage** | **Off** — environmental/accident damage (fall, fire, lava, drowning, etc.) canceled for players. **Reduced** — mitigated. **Full** — vanilla. | Full |
+| **World Damage** | **Off** — environmental/accident damage (fall, fire, lava, drowning, powder snow / **freeze**, etc.) canceled for players. **Reduced** — mitigated. **Full** — vanilla. | Full |
 
 When **Enabled** is on, the pack keeps the world on **Easy** difficulty so spawning and hunger behave like a normal Easy world (not Peaceful).
 

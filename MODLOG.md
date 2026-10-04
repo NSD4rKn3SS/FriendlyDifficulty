@@ -33,7 +33,7 @@ Run on a **26.3** world after copying the pack to `saves/<world>/datapacks/` and
 - [ ] **Calm-down:** Stop fighting ~30s — that zombie ignores you again.
 - [ ] **Skeleton:** Calm skeleton does not shoot; provoked skeleton shoots.
 - [ ] **Explosions:** Toggle Off / Reduced / Full — creeper (and ghast if tested) outcomes match setting.
-- [ ] **World damage:** Toggle Off / Reduced / Full — fall/lava/drowning (etc.) match setting.
+- [ ] **World damage:** Toggle Off / Reduced / Full — fall/lava/drowning/powder snow (`minecraft:freeze` in `world_hazards`) match setting.
 - [ ] **Dialog persist:** Change settings, `/reload`, reopen dialog — values retained.
 - [ ] **CI artifact:** Forgejo build produces zip with `pack.mcmeta` + `data/` at zip root.
 
