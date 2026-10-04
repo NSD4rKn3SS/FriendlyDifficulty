@@ -97,6 +97,27 @@ def main() -> int:
         if "scoreboard players get $enabled fd.global" not in text and "score $enabled fd.global matches 1" not in text:
             err("setup/tick.mcfunction must gate on $enabled fd.global matches 1")
 
+    for rel in (
+        "data/friendlydifficulty/function/combat/tick.mcfunction",
+        "data/friendlydifficulty/function/combat/as_calm.mcfunction",
+        "data/friendlydifficulty/function/combat/clear_player_target.mcfunction",
+        "data/friendlydifficulty/function/combat/provoke.mcfunction",
+        "data/friendlydifficulty/function/combat/timer.mcfunction",
+        "data/friendlydifficulty/function/combat/on_player_hurt_entity.mcfunction",
+        "data/friendlydifficulty/advancement/provoke.json",
+    ):
+        if not (ROOT / rel).is_file():
+            err(f"missing {rel}")
+
+    tick_fn = ROOT / "data/friendlydifficulty/function/setup/tick.mcfunction"
+    if tick_fn.is_file() and "friendlydifficulty:combat/tick" not in tick_fn.read_text(encoding="utf-8"):
+        err("setup/tick.mcfunction must call friendlydifficulty:combat/tick")
+
+    adv = load_json(ROOT / "data/friendlydifficulty/advancement/provoke.json")
+    if adv is not None:
+        if adv.get("rewards", {}).get("function") != "friendlydifficulty:combat/on_player_hurt_entity":
+            err("provoke advancement must reward combat/on_player_hurt_entity")
+
     if errors:
         print("FAIL")
         for e in errors:

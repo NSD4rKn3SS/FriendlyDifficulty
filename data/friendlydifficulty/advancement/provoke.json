@@ -1,0 +1,21 @@
+{
+  "criteria": {
+    "hit_affected": {
+      "trigger": "minecraft:player_hurt_entity",
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "#friendlydifficulty:affected"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "function": "friendlydifficulty:combat/on_player_hurt_entity"
+  }
+}
