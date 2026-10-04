@@ -113,6 +113,17 @@ def main() -> int:
     if tick_fn.is_file() and "friendlydifficulty:combat/tick" not in tick_fn.read_text(encoding="utf-8"):
         err("setup/tick.mcfunction must call friendlydifficulty:combat/tick")
 
+    exp = ROOT / "data/friendlydifficulty/function/explosions/apply.mcfunction"
+    if not exp.is_file():
+        err("missing explosions/apply.mcfunction")
+    else:
+        text = exp.read_text(encoding="utf-8")
+        for needle in ("ExplosionRadius set value 0", "ExplosionRadius set value 1", "ExplosionRadius set value 3"):
+            if needle not in text:
+                err(f"explosions/apply.mcfunction missing `{needle}`")
+    if tick_fn.is_file() and "friendlydifficulty:explosions/apply" not in tick_fn.read_text(encoding="utf-8"):
+        err("tick must call explosions/apply")
+
     adv = load_json(ROOT / "data/friendlydifficulty/advancement/provoke.json")
     if adv is not None:
         if adv.get("rewards", {}).get("function") != "friendlydifficulty:combat/on_player_hurt_entity":
