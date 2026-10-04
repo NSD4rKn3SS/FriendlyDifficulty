@@ -1,0 +1,45 @@
+{
+  "type": "minecraft:confirmation",
+  "title": {"text": "Friendly Difficulty"},
+  "external_title": {"text": "Friendly Difficulty"},
+  "inputs": [
+    {
+      "type": "minecraft:boolean",
+      "key": "enabled",
+      "label": {"text": "Enabled"},
+      "initial": false,
+      "on_true": "1",
+      "on_false": "0"
+    },
+    {
+      "type": "minecraft:single_option",
+      "key": "explosions",
+      "label": {"text": "Explosions"},
+      "options": [
+        {"id": "0", "display": {"text": "Off"}},
+        {"id": "1", "display": {"text": "Reduced"}, "initial": true},
+        {"id": "2", "display": {"text": "Full"}}
+      ]
+    },
+    {
+      "type": "minecraft:single_option",
+      "key": "world_damage",
+      "label": {"text": "World Damage"},
+      "options": [
+        {"id": "0", "display": {"text": "Off"}},
+        {"id": "1", "display": {"text": "Reduced"}},
+        {"id": "2", "display": {"text": "Full"}, "initial": true}
+      ]
+    }
+  ],
+  "yes": {
+    "label": {"text": "Apply"},
+    "action": {
+      "type": "dynamic/run_command",
+      "template": "function friendlydifficulty:options/apply {enabled:$(enabled),explosions:$(explosions),world_damage:$(world_damage)}"
+    }
+  },
+  "no": {
+    "label": {"text": "Cancel"}
+  }
+}

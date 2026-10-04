@@ -1,0 +1,19 @@
+{
+  "criteria": {
+    "hazard": {
+      "trigger": "minecraft:entity_hurt_player",
+      "conditions": {
+        "damage": {
+          "type": {
+            "tags": [
+              {"id": "friendlydifficulty:world_hazards", "expected": true}
+            ]
+          }
+        }
+      }
+    }
+  },
+  "rewards": {
+    "function": "friendlydifficulty:world_damage/on_hazard"
+  }
+}

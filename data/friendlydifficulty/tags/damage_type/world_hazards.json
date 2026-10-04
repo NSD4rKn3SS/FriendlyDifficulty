@@ -1,0 +1,17 @@
+{
+  "values": [
+    "minecraft:fall",
+    "minecraft:in_fire",
+    "minecraft:on_fire",
+    "minecraft:lava",
+    "minecraft:drown",
+    "minecraft:in_wall",
+    "minecraft:cactus",
+    "minecraft:sweet_berry_bush",
+    "minecraft:freeze",
+    "minecraft:hot_floor",
+    "minecraft:lightning_bolt",
+    "minecraft:outside_border",
+    "minecraft:campfire"
+  ]
+}
