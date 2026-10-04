@@ -124,6 +124,34 @@ def main() -> int:
     if tick_fn.is_file() and "friendlydifficulty:explosions/apply" not in tick_fn.read_text(encoding="utf-8"):
         err("tick must call explosions/apply")
 
+    haz = load_json(ROOT / "data/friendlydifficulty/tags/damage_type/world_hazards.json")
+    if haz is None:
+        err("missing world_hazards.json")
+    else:
+        values = set(haz.get("values", []))
+        for dt in (
+            "minecraft:fall",
+            "minecraft:in_fire",
+            "minecraft:on_fire",
+            "minecraft:lava",
+            "minecraft:drown",
+            "minecraft:in_wall",
+            "minecraft:cactus",
+            "minecraft:sweet_berry_bush",
+            "minecraft:freeze",
+        ):
+            if dt not in values:
+                err(f"world_hazards missing {dt}")
+    for rel in (
+        "data/friendlydifficulty/advancement/world_hazard_hit.json",
+        "data/friendlydifficulty/function/world_damage/on_hazard.mcfunction",
+        "data/friendlydifficulty/function/world_damage/apply.mcfunction",
+    ):
+        if not (ROOT / rel).is_file():
+            err(f"missing {rel}")
+    if tick_fn.is_file() and "friendlydifficulty:world_damage/apply" not in tick_fn.read_text(encoding="utf-8"):
+        err("tick must call world_damage/apply")
+
     adv = load_json(ROOT / "data/friendlydifficulty/advancement/provoke.json")
     if adv is not None:
         if adv.get("rewards", {}).get("function") != "friendlydifficulty:combat/on_player_hurt_entity":
