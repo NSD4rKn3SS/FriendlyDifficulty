@@ -1,1 +1,1 @@
-tellraw @s {"text":"Settings UI coming in Dialog task","color":"gray"}
+dialog show @s friendlydifficulty:settings

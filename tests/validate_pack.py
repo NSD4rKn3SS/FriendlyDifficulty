@@ -157,6 +157,25 @@ def main() -> int:
         if adv.get("rewards", {}).get("function") != "friendlydifficulty:combat/on_player_hurt_entity":
             err("provoke advancement must reward combat/on_player_hurt_entity")
 
+    dlg = load_json(ROOT / "data/friendlydifficulty/dialog/settings.json")
+    if dlg is None:
+        err("missing dialog/settings.json")
+    else:
+        if dlg.get("type") not in ("minecraft:confirmation", "minecraft:multi_action", "confirmation", "multi_action"):
+            err("settings dialog type must be confirmation or multi_action")
+        keys = {i.get("key") for i in dlg.get("inputs", [])}
+        for k in ("enabled", "explosions", "world_damage"):
+            if k not in keys:
+                err(f"dialog missing input key {k}")
+    for rel in (
+        "data/minecraft/tags/dialog/pause_screen_additions.json",
+        "data/minecraft/tags/dialog/quick_actions.json",
+        "data/friendlydifficulty/function/options/open.mcfunction",
+        "data/friendlydifficulty/function/options/apply.mcfunction",
+    ):
+        if not (ROOT / rel).is_file():
+            err(f"missing {rel}")
+
     if errors:
         print("FAIL")
         for e in errors:

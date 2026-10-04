@@ -1,5 +1,6 @@
 scoreboard objectives add fd.global dummy
 scoreboard objectives add fd.provoke dummy
+scoreboard objectives add fd.settings trigger
 
 # Defaults only if never set
 execute unless score $enabled fd.global = $enabled fd.global run scoreboard players set $enabled fd.global 0
