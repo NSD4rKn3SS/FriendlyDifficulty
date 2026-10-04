@@ -77,6 +77,26 @@ def main() -> int:
             if mob not in values:
                 err(f"affected.json missing {mob}")
 
+    load_fn = ROOT / "data/friendlydifficulty/function/setup/load.mcfunction"
+    if load_fn.is_file():
+        text = load_fn.read_text(encoding="utf-8")
+        for needle in (
+            "scoreboard objectives add fd.global",
+            "scoreboard objectives add fd.provoke",
+            "scoreboard players set $enabled fd.global",
+            "scoreboard players set $explosions fd.global",
+            "scoreboard players set $world_damage fd.global",
+            "scoreboard players set $const_provoke fd.global 600",
+        ):
+            if needle not in text:
+                err(f"setup/load.mcfunction missing: {needle}")
+
+    tick_fn = ROOT / "data/friendlydifficulty/function/setup/tick.mcfunction"
+    if tick_fn.is_file():
+        text = tick_fn.read_text(encoding="utf-8")
+        if "scoreboard players get $enabled fd.global" not in text and "score $enabled fd.global matches 1" not in text:
+            err("setup/tick.mcfunction must gate on $enabled fd.global matches 1")
+
     if errors:
         print("FAIL")
         for e in errors:
