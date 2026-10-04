@@ -1,64 +1,66 @@
 # MODLOG — FriendlyDifficulty
 
-## Intake
-- **What this is:** Minecraft **datapack** (not Fabric/Forge/Quilt Java mod), namespace `friendlydifficulty`.
+## Current route: Java 26.3 datapack (format 121.0)
+
+| Item | Detail |
+|------|--------|
+| **Form** | Vanilla datapack only (`friendlydifficulty` namespace). No Fabric/Forge loader in v1. |
+| **Target** | Minecraft Java **26.3**, `pack.mcmeta` format **121.0** (`min_format` / `max_format`). |
+| **Layout** | Singular folders: `function/`, `tags/function/`, `tags/entity_type/` (1.18 plural paths removed). |
+| **CI** | `.forgejo/workflows/build.yml` — self-hosted runner, `validate_pack.py`, zip → artifact `friendlydifficulty`. |
+| **Docs** | `README.md` — install, dialog settings, provoke rules; Fabric difficulty row deferred. |
+
+### Settings defaults (`fd.global`)
+
+| Score | Default | Values |
+|-------|---------|--------|
+| `$enabled` | **0** (off) | 0 off, 1 on |
+| `$explosions` | **1** (Reduced) | 0 Off, 1 Reduced, 2 Full |
+| `$world_damage` | **2** (Full) | 0 Off, 1 Reduced, 2 Full |
+| Provoke duration | **600 ticks** (~30s) | Per-entity `fd.provoke` |
+
+Dialog: pause screen + quick actions → `friendlydifficulty:settings`; Apply runs `options/apply` with macro args.
+
+### Manual in-game test checklist (26.3)
+
+Run on a **26.3** world after copying the pack to `saves/<world>/datapacks/` and `/reload`.
+
+- [ ] **Load:** No format errors on reload; chat shows `[Friendly Difficulty] loaded · [Settings]`.
+- [ ] **Enable:** Open pause **Friendly Difficulty** dialog; enable Friendly; world stays/sets **Easy**.
+- [ ] **Calm ignore:** With Friendly on, walk near a zombie — it does not attack.
+- [ ] **In-fighting:** Two zombies angered at each other (not at player) can still fight.
+- [ ] **Provoke one:** Punch one zombie — only that zombie attacks; others stay calm.
+- [ ] **Calm-down:** Stop fighting ~30s — that zombie ignores you again.
+- [ ] **Skeleton:** Calm skeleton does not shoot; provoked skeleton shoots.
+- [ ] **Explosions:** Toggle Off / Reduced / Full — creeper (and ghast if tested) outcomes match setting.
+- [ ] **World damage:** Toggle Off / Reduced / Full — fall/lava/drowning (etc.) match setting.
+- [ ] **Dialog persist:** Change settings, `/reload`, reopen dialog — values retained.
+- [ ] **CI artifact:** Forgejo build produces zip with `pack.mcmeta` + `data/` at zip root.
+
+### Deferred
+
+- **Fabric / NeoForge:** Fifth **Friendly** row in vanilla difficulty selector (documented in README).
+
+---
+
+## Historical intake (1.18 upstream fork)
+
+- **What this was:** Minecraft **datapack** (not Fabric/Forge/Quilt Java mod), namespace `friendlydifficulty`.
 - **Idea (upstream):** "Peaceful, but with hostile mobs" — zero melee damage, neutralize projectiles/explosions, optional peaceful hunger.
-- **Repo:** fork of `Scommander/FriendlyDifficulty` (`NSD4rKn3SS/FriendlyDifficulty`). Compare status: **identical to upstream** (0 ahead / 0 behind).
-- **Last upstream activity:** 2022-01-01 (`v2.0` release for 1.18). Fork created 2025-09-14 with **no local commits of your own**.
-- **Done means (for a revive):** pack loads on a chosen modern MC version, hostiles spawn but cannot hurt the player, options still toggle hunger, short in-game clip.
+- **Repo:** fork of `Scommander/FriendlyDifficulty` (`NSD4rKn3SS/FriendlyDifficulty`).
+- **Last upstream activity:** 2022-01-01 (`v2.0` release for 1.18).
 
-## Where you left off
-Development never continued past the forked **finished v2.0** snapshot. Working tree is clean; there is no unfinished feature branch, no README (deleted in `a3f69d7`), and no `MODLOG` prior to this note.
+## Where the 1.18 fork left off
 
-Chronology:
+Development on the frozen **v2.0** snapshot stopped after fork. The 26.3 port (2026) replaces the 1.18 behavior with provoke-based combat, dialog settings, explosions/world damage tiers, and Forgejo packaging.
+
+Chronology (legacy):
 1. `6f0f6c3`–`634627c` — GitHub template README
 2. `6adbed9` — full datapack land (Scommander)
 3. `a3f69d7` — README deleted
-4. `2d18d5b` — `pack_format` set to **8** (1.18–1.18.1), shipped as release **v2.0**
+4. `2d18d5b` — `pack_format` **8** (1.18–1.18.1), release **v2.0**
 
-## Layout check (correct for 1.18 datapacks)
+## Hard constraints for cloud / CI workspace
 
-| Piece | Status |
-|---|---|
-| `pack.mcmeta` `pack_format: 8` | OK for Java 1.18–1.18.1 |
-| `#minecraft:load` → `friendlydifficulty:setup/schedule` | Wired |
-| `#minecraft:tick` → `friendlydifficulty:setup/tick` | Wired |
-| Scoreboards / options / weakness / projectile neutralize | Present |
-| Entity type tags (`hostile`, `projectile`, `fireball`, `guardian`) | Present |
-
-Entrypoints and function wiring are structurally sound for that era. This is a **complete 1.18 datapack**, not a half-built skeleton.
-
-## Behavior summary (implemented)
-- On load (+1s schedule): chat banner `[V1.0.0] Friendly Difficulty` + `[Options]` → hunger toggle (`$saturation` on `fd.global`).
-- Every tick: untagged `#friendlydifficulty:hostile` → `weakness` (attack damage −100000, Weakness, creeper `ExplosionRadius:0`, guardian follow_range 0, evoker fangs warmup −20).
-- Player projectiles tagged `from_player` via bow/crossbow/trident/splash scoreboards; non-player arrows/tridents/splash potions neutralized.
-- Nearby fireballs / shulker bullets killed with FX.
-- Default: saturation effect so hunger behaves like peaceful unless options set `$saturation` to 1.
-
-## Gaps / leftovers inside the 1.18 code
-1. **`#special case for wolf`** in `setup/tick.mcfunction` — comment only; never implemented (wolves are already in the hostile tag and get the generic weakness pass).
-2. **Version string mismatch:** reload message says `V1.0.0` while GitHub release / intent is **v2.0**.
-3. **Fireballs in `#hostile`:** `weakness` runs `attribute` + `effect` on fireball entities (odd targets; explode power also patched). Works enough for 1.18 style but is messy.
-4. **Missing later mobs** (post-1.18): Warden, Frog-era n/a, Bogged, Breeze, etc. — expected for a frozen 1.18 pack.
-5. **No lab / save backup / showcase** artifacts in this cloud workspace; no Minecraft install here to live-test.
-
-## Modern Minecraft (if you resume on 1.21.x)
-Not "set correctly" for current Java without a port. At minimum expect:
-- Bump `pack_format` (e.g. **81** for 1.21.7–1.21.8; **88+** / `min_format`–`max_format` for 1.21.9+).
-- 1.21 folder rename: `functions/` → `function/`, `tags/functions` → `tags/function`, `tags/entity_types` → `tags/entity_type`.
-- Attribute IDs: `minecraft:generic.attack_damage` → `minecraft:attack_damage` (and similar for follow_range).
-- Item/potion NBT → components (splash potion neutralize in `setup/tick` uses pre-1.20.5 `tag`/`Count`).
-- Re-test Owner UUID / arrow damage fields; some entity data names moved.
-- Expand hostile tag for 1.19–1.21 mobs you care about.
-
-## Route (if continuing)
-**Data/datapack only** — keep vanilla commands; no loader. Cheapest path: port the existing pack to one target MC version, then vertical-slice (zombie melee + skeleton arrow + creeper + hunger toggle) before adding new mobs.
-
-## Next step options
-A. **Port to a target version** (say 1.21.8) and verify in-game.  
-B. **Stay on 1.18** and only polish leftovers (wolf comment, version string, README).  
-C. **Leave as archive** of Scommander v2.0 — already complete for that version.
-
-## Hard constraints for this workspace
-- No Minecraft client/server installed → cannot run the oracle here.
-- `um` CLI not on PATH in this environment; assessment is from pack structure + git/GitHub history.
+- No Minecraft client/server in CI → acceptance is `tests/validate_pack.py` + manual checklist above.
+- In-game verification requires a local 26.3 install.

@@ -176,6 +176,16 @@ def main() -> int:
         if not (ROOT / rel).is_file():
             err(f"missing {rel}")
 
+    if not (ROOT / ".forgejo/workflows/build.yml").is_file():
+        err("missing .forgejo/workflows/build.yml")
+    else:
+        wf = (ROOT / ".forgejo/workflows/build.yml").read_text(encoding="utf-8")
+        for needle in ("runs-on: self-hosted", "forgejo/upload-artifact@v4", "FriendlyDifficulty-"):
+            if needle not in wf:
+                err(f"workflow missing `{needle}`")
+    if not (ROOT / "README.md").is_file():
+        err("missing README.md")
+
     if errors:
         print("FAIL")
         for e in errors:

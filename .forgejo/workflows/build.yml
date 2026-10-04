@@ -1,0 +1,29 @@
+name: Build
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Validate pack structure
+        run: python3 tests/validate_pack.py
+
+      - name: Package datapack
+        run: |
+          mkdir -p dist
+          REF="${GITHUB_REF_NAME:-manual}"
+          REF_SAFE=$(echo "$REF" | tr '/' '-')
+          zip -r "dist/FriendlyDifficulty-${REF_SAFE}.zip" pack.mcmeta data
+
+      - name: Upload datapack zip
+        uses: forgejo/upload-artifact@v4
+        with:
+          name: friendlydifficulty
+          path: dist/*.zip
+          if-no-files-found: error
+          retention-days: 14
