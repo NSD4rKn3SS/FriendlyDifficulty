@@ -615,7 +615,9 @@ git commit -am "feat: add Off/Reduced/Full explosion modes"
     "minecraft:sweet_berry_bush",
     "minecraft:freeze",
     "minecraft:hot_floor",
-    "minecraft:lightning_bolt"
+    "minecraft:lightning_bolt",
+    "minecraft:outside_border",
+    "minecraft:campfire"
   ]
 }
 ```
